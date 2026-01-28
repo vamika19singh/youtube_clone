@@ -1,10 +1,5 @@
-import express from 'express';
+import app from './src/app.js';
 
-const app = express();
-
-app.get('/', (req, res) => {
-    res.send("Youtube Clone Backend is running");
-});
 
 const PORT = 5000;
 
