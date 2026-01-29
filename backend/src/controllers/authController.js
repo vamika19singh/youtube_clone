@@ -3,7 +3,6 @@ import jwt from "jsonwebtoken";
 
 export const registerUser = async (req, res) => {
     try {
-
         const { username, email, password } = req.body;
 
         //Validate
@@ -23,7 +22,7 @@ export const registerUser = async (req, res) => {
         }
 
         //create new user
-        const user = new User({
+        const user = await User.create({
             username,
             email,
             password,
@@ -34,9 +33,9 @@ export const registerUser = async (req, res) => {
             userId: user._id,
         });
     } catch (error) {
+        console.error("Register error:", error);
         res.status(500).json({
             message: " Server error during registration",
-
         });
     }
 };
@@ -53,7 +52,9 @@ export const loginUser = async (req, res) => {
         }
 
         //Find user
+        console.log("Login attempt for email:", email);
         const user = await User.findOne({email});
+        console.log("User found:", !!user);
         if(!user) {
             return res.status(401).json({
                 message: "Invalid email or password",
