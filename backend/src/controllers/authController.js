@@ -52,9 +52,7 @@ export const loginUser = async (req, res) => {
         }
 
         //Find user
-        console.log("Login attempt for email:", email);
         const user = await User.findOne({email});
-        console.log("User found:", !!user);
         if(!user) {
             return res.status(401).json({
                 message: "Invalid email or password",
