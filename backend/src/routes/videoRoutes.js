@@ -1,5 +1,15 @@
 import express from 'express';
-import { createVideo, getAllVideos, getVideosByCategory, searchVideos, getVideosByChannel } from '../controllers/videoController.js';
+import { 
+    createVideo, 
+    getAllVideos, 
+    getVideosByCategory, 
+    searchVideos, 
+    getVideosByChannel,
+    getVideoById,
+    likeVideo,
+    dislikeVideo,
+    addComment
+} from '../controllers/videoController.js';
 import protect from '../middlewares/authMiddleware.js';
 
 const router = express.Router();
@@ -9,8 +19,12 @@ router.get("/", getAllVideos);
 router.get("/search", searchVideos);
 router.get("/category/:category", getVideosByCategory);
 router.get("/channel/:channelId", getVideosByChannel);
+router.get("/:id", getVideoById);
 
-// Creating protected route for video
+// Protected routes
 router.post("/", protect, createVideo);
+router.post("/:id/like", protect, likeVideo);
+router.post("/:id/dislike", protect, dislikeVideo);
+router.post("/:id/comment", protect, addComment);
 
 export default router;

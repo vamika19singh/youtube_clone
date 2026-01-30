@@ -144,3 +144,122 @@ export const getVideosByChannel = async (req, res) => {
         });
     }
 };
+
+//@desc Get single video by ID
+//@route GET /api/videos/:id
+export const getVideoById = async (req, res) => {
+    try {
+        const video = await Video.findByIdAndUpdate(
+            req.params.id,
+            { $inc: { views: 1 } },
+            { new: true }
+        )
+        .populate("channel", "channelName")
+        .populate("uploader", "username")
+        .populate("comments.user", "username");
+
+        if(!video) {
+            return res.status(404).json({
+                message: "Video not found",
+            });
+        }
+
+        res.status(200).json(video);
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error while fetching video",
+        });
+    }
+};
+
+//@desc Like a video
+//@route POST /api/videos/:id/like
+export const likeVideo = async (req, res) => {
+    try {
+        const video = await Video.findById(req.params.id);
+
+        if(!video) {
+            return res.status(404).json({
+                message: "Video not found",
+            });
+        }
+
+        video.likes += 1;
+        await video.save();
+
+        res.status(200).json({
+            message: "Video liked",
+            likes: video.likes,
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error while liking video",
+        });
+    }
+};
+
+//@desc Dislike a video
+//@route POST /api/videos/:id/dislike
+//@access Private
+export const dislikeVideo = async (req, res) => {
+    try {
+        const video = await Video.findById(req.params.id);
+
+        if(!video) {
+            return res.status(404).json({
+                message: "Video not found",
+            });
+        }
+
+        video.dislikes += 1;
+        await video.save();
+
+        res.status(200).json({
+            message: "Video disliked",
+            dislikes: video.dislikes,
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error while disliking video",
+        });
+    }
+};
+
+//@desc  Add comment to a video
+//@route POST /api/videos/:id/comment
+//@access Private
+export const addComment = async (req, res) => {
+    try {
+        const { text } = req.body;
+
+        if(!text) {
+            return res.status(400).json({
+                message: "Comment text is required",
+            });
+        }
+
+        const video = await Video.findById(req.params.id);
+
+        if(!video) {
+            return res.status(404).json({
+                message: "Video not found",
+            });
+        }
+
+        video.comments.push({
+            user: req.user._id,
+            text,
+        });
+
+        await video.save();
+
+        res.status(201).json({
+            message: "Comment added successfully",
+            comments: video.comments,
+        });
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error while adding comment",
+        });
+    }
+};
