@@ -48,3 +48,42 @@ export const createChannel = async (req, res) => {
     }
 };
 
+//@desc Get channel by ID
+//@route GET /api/channels/:id
+//@access Public
+
+export const getChannelById = async (req, res) => {
+    try {
+        const channel = await Channel.findById(req.params.id)
+        .populate("owner", "username email")
+        .populate("videos");
+
+        if(!channel) {
+            return res.status(404).json({
+                message: "Channel not found",
+            });
+        }
+        res.status(200).json(channel);
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error while fetching channel",
+        });
+    }
+};
+
+//@desc   Get channel of logged in user
+//@route  GET /api/channels/my
+//@access Private
+
+export const getMyChannels = async (req, res) => {
+    try {
+        const channel = await Channel.findOne({ owner: req.user._id });
+
+        res.status(200).json(channel);
+    } catch (error) {
+        res.status(500).json({
+            message: "Server error while fetching your channel",
+        });
+    }
+};
+        
