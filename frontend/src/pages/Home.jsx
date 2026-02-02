@@ -3,11 +3,20 @@ import { useLocation } from "react-router-dom";
 import API from "../services/api";
 import VideoCard from "../components/VideoCard";
 
+const CATEGORIES = [
+  "All",
+  "Education",
+  "Technology",
+  "Music",
+  "Gaming",
+  "Lifestyle",
+];
+
 function Home() {
   const [videos, setVideos] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [activeCategory, setActiveCategory] = useState("All");
 
-  // Read search query from URL
   const location = useLocation();
   const searchQuery =
     new URLSearchParams(location.search).get("search") || "";
@@ -16,7 +25,7 @@ function Home() {
     const fetchVideos = async () => {
       try {
         const res = await API.get("/videos");
-        setVideos(res.data);
+        setVideos(Array.isArray(res.data) ? res.data : []);
       } catch (error) {
         console.error("Failed to fetch videos", error);
       } finally {
@@ -27,10 +36,20 @@ function Home() {
     fetchVideos();
   }, []);
 
-  // Filter videos based on search query
-  const filteredVideos = videos.filter((video) =>
-    video.title.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredVideos = videos.filter((video) => {
+    const title = typeof video?.title === "string" ? video.title : "";
+    const category =
+      typeof video?.category === "string" ? video.category : "";
+
+    const matchesSearch = title
+      .toLowerCase()
+      .includes(searchQuery.toLowerCase());
+
+    const matchesCategory =
+      activeCategory === "All" || category === activeCategory;
+
+    return matchesSearch && matchesCategory;
+  });
 
   if (loading) {
     return (
@@ -42,6 +61,23 @@ function Home() {
 
   return (
     <div className="p-6">
+      {/* Category Filter Buttons */}
+      <div className="flex gap-3 mb-6 overflow-x-auto">
+        {CATEGORIES.map((category) => (
+          <button
+            key={category}
+            onClick={() => setActiveCategory(category)}
+            className={`px-4 py-1 rounded-full border text-sm whitespace-nowrap ${
+              activeCategory === category
+                ? "bg-red-600 text-white"
+                : "bg-gray-100 hover:bg-gray-200"
+            }`}
+          >
+            {category}
+          </button>
+        ))}
+      </div>
+
       <h1 className="text-xl font-bold mb-4">Recommended</h1>
 
       {filteredVideos.length === 0 ? (
