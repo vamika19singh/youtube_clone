@@ -1,6 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useEffect, useState } from "react";
 import API from "../services/api";
+import { Link } from "react-router-dom";
 
 function VideoPlayer() {
   const { id } = useParams();
@@ -62,7 +63,16 @@ function VideoPlayer() {
 
         <h1 className="mt-4 text-xl font-bold">{video.title}</h1>
 
-        <p className="text-sm text-gray-600">{video.views} views</p>
+        <div className="mt-1">
+          <Link
+            to={`/channel/${video.channel?._id}`}
+            className="text-sm font-semibold text-gray-700 hover:underline"
+            >
+              {video.channel?.channelName}
+            </Link>
+        </div>
+
+        <p className="text-sm text-gray-600 mt-1">{video.views} views</p>
 
         <div className="flex items-center space-x-4 mt-3">
           <button

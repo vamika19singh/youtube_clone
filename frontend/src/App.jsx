@@ -5,6 +5,7 @@ import VideoPlayer from './pages/VideoPlayer';
 import Register from './pages/Register';
 import Login from './pages/Login';
 import Home from './pages/Home';
+import Channel from './pages/Channel';
 
 
 
@@ -28,6 +29,15 @@ function App() {
         element={
           <ProtectedRoute>
             <VideoPlayer />
+          </ProtectedRoute>
+        }
+      />
+
+      <Route
+        path="/channel/:id"
+        element={
+          <ProtectedRoute>
+            <Channel />
           </ProtectedRoute>
         }
       />
