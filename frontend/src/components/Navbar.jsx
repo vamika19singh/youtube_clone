@@ -3,12 +3,14 @@ import { isAuthenticated, logout } from "../utils/auth";
 import { useState, useEffect } from "react";
 import { toggleTheme } from "../utils/theme";
 import { Moon, Sun } from "lucide-react";
+import { Play } from "lucide-react";
 
 function Navbar() {
   const [search, setSearch] = useState("");
   const [isDark, setIsDark] = useState(false);
   const navigate = useNavigate();
   const authenticated = isAuthenticated();
+  
 
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme");
@@ -51,8 +53,8 @@ function Navbar() {
         to="/"
         className="flex items-center gap-2 text-xl font-bold text-red-600"
       >
-        <span className="bg-red-600 text-white px-2 py-1 rounded">▶</span>
-        <span>YouTube Clone</span>
+        <span className="bg-red-600 text-white px-2 py-1 rounded"><Play /></span>
+        <span>YouTube</span>
       </Link>
 
       <form onSubmit={handleSearch} className="flex w-1/2">
@@ -61,8 +63,7 @@ function Navbar() {
           placeholder="Search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
-          className="flex-1 border px-3 py-1 rounded-l
-                     dark:bg-gray-800 dark:border-gray-700"
+          className="w-96 bg-zinc-900 focus:outline-none border-none"
         />
         <button className="bg-red-600 text-white px-4 rounded-r">Search</button>
       </form>
@@ -79,8 +80,8 @@ function Navbar() {
           <button onClick={handleLogout}>Logout</button>
         ) : (
           <>
-            <Link to="/login">Login</Link>
-            <Link to="/register">Register</Link>
+            <Link to="/login" className="text-gray-700 hover:text-red-600">Login</Link>
+            <Link to="/register" className="text-gray-700 hover:text-red-600 ml-4">Register</Link>
           </>
         )}
       </div>

@@ -5,6 +5,9 @@ import {
   Tv,
   Library,
   Menu,
+  History,
+  ThumbsUp,
+  ListVideo,
 } from "lucide-react";
 import { useState } from "react";
 
@@ -15,28 +18,31 @@ function Sidebar() {
     <aside
       className={`${
         collapsed ? "w-20" : "w-60"
-      } bg-white dark:bg-gray-900 border-r dark:border-gray-700
+      } bg-white dark:bg-gray-900 border-r
       min-h-screen transition-all duration-300`}
     >
       {/* Toggle button */}
       <div className="flex items-center px-4 py-3">
         <button
           onClick={() => setCollapsed(!collapsed)}
-          className="p-2 rounded hover:bg-gray-200 dark:hover:bg-gray-700"
+          className="p-2 rounded hover:bg-gray-200 text-amber-50"
         >
           <Menu size={20} />
         </button>
 
         {!collapsed && (
-          <span className="ml-3 font-semibold">Menu</span>
+          <span className="ml-3 font-semibold text-amber-50">Menu</span>
         )}
       </div>
 
-      <nav className="mt-2 space-y-1">
+      <nav className="mt-2 space-y-1 text-amber-50">
         <SidebarItem to="/" icon={<Home />} label="Home" collapsed={collapsed} />
-        <SidebarItem icon={<Flame />} label="Trending" collapsed={collapsed} disabled />
-        <SidebarItem icon={<Tv />} label="Subscriptions" collapsed={collapsed} disabled />
-        <SidebarItem icon={<Library />} label="Library" collapsed={collapsed} disabled />
+        <SidebarItem icon={<Flame />} label="Trending" collapsed={collapsed} />
+        <SidebarItem icon={<Tv />} label="Subscriptions" collapsed={collapsed} />
+        <SidebarItem icon={<Library />} label="Library" collapsed={collapsed} />
+        <SidebarItem icon={<History />} label="History" collapsed={collapsed} />
+        <SidebarItem icon={<ThumbsUp />} label="Liked Videos" collapsed={collapsed} />
+        <SidebarItem icon={<ListVideo />} label="PlayList" collapsed={collapsed} />
       </nav>
     </aside>
   );
